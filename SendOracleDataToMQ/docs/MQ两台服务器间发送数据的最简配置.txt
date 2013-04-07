@@ -1,0 +1,39 @@
+发送方服务器：
+删除队列管理器
+endmqm -i LINUX
+dltmqm LINUX
+创建队列管理器
+crtmqm -q LINUX
+strmqm LINUX
+runmqsc LINUX
+创建队列和通道
+DEFINE QL(LINUX_BDCSDL) USAGE(XMITQ) DEFPSIST(YES) REPLACE
+DEFINE QREMOTE(LINUX_YCDL) RNAME(WIN_BDDL) RQMNAME(WIN) XMITQ(LINUX_BDCSDL) REPLACE
+DEFINE CHANNEL(ALL_TD) CHLTYPE(SDR) CONNAME('192.168.0.82(1414)') XMITQ(LINUX_BDCSDL) REPLACE
+启动通道
+runmqchl -c ALL_TD -m LINUX
+发送消息
+amqsput LINUX_YCDL LINUX
+
+
+接收方服务器：
+删除队列管理器
+endmqm -I WIN
+dltmqm WIN
+创建队列管理器
+crtmqm -q WIN
+strmqm WIN
+runmqsc WIN
+创建队列和通道
+DEFINE QL(WIN_BDDL) DEFPSIST(YES) REPLACE
+DEFINE CHANNEL(ALL_TD) CHLTYPE(RCVR) REPLACE
+启动监听
+runmqlsr -t TCP -p 1414 -m WIN
+获取消息
+amqsget WIN_BDDL WIN
+
+
+
+要点：
+1.两方面通道名要一致
+2.WIN的监听一定要启动

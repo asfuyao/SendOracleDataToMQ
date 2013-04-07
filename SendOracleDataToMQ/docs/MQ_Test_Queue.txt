@@ -1,0 +1,65 @@
+
+linux端队列
+
+ANSTEEL ERP：
+DEF CHL(RAIL.ANS.CH) CHLTYPE(RCVR) REPLACE
+DEF QL(ADM_VIR.QM) USAGE(XMITQ) DEFPSIST(YES) REPLACE
+DEF CHL(ANS.RAIL.CH) CHLTYPE(SDR) TRPTYPE(TCP) CONNAME('192.168.0.87(1414)') XMITQ(ADM_VIR.QM) SHORTTMR(20) SHORTRTY(540) LONGTMR(600) REPLACE
+
+ALTER QL(ADM_VIR.QM) TRIGDATA(ANS.RAIL.CH)
+ALTER QL(ADM_VIR.QM) INITQ(SYSTEM.CHANNEL.INITQ)
+DEF QR(ANSTEEL.A) RNAME(ANSTEEL.A) RQMNAME(ADM_VIR.QM) XMITQ(ADM_VIR.QM) REPLACE
+
+DEF QL(ATY.ERP.D.1.A) MAXDEPTH(1060) MAXMSGL(20600) TRIGTYPE(FIRST) DEFPSIST(YES) REPLACE 
+
+
+
+
+windows端队列
+
+RAIL TRANSFER ERP：
+DEF CHL(ANS.RAIL.CH) CHLTYPE(RCVR) REPLACE
+DEF QL(ADM_WYF.QM) USAGE(XMITQ) DEFPSIST(YES) REPLACE
+DEF CHL(RAIL.ANS.CH) CHLTYPE(SDR) TRPTYPE(TCP) CONNAME('192.168.0.82(1414)') XMITQ(ADM_WYF.QM) SHORTTMR(20) SHORTRTY(540) LONGTMR(600) REPLACE
+
+ALTER QL(ADM_WYF.QM) TRIGDATA(RAIL.ANS.CH)
+ALTER QL(ADM_WYF.QM) INITQ(SYSTEM.CHANNEL.INITQ)
+DEF QR(ATY.ERP.D.1.A) RNAME(ATY.ERP.D.1.A) RQMNAME(ADM_WYF.QM) XMITQ(ADM_WYF.QM) REPLACE
+
+DEF QL(ANSTEEL.A) MAXDEPTH(1060) MAXMSGL(20600) TRIGTYPE(FIRST) DEFPSIST(YES) REPLACE 
+
+
+linxu下自动启动：
+创建/etc/init.d/startmqm
+
+#!/bin/sh
+# chkconfig: 35 110 20
+# description: MQManager auto start-stop script.
+
+MGR_NAME=ADM_VIR.QM
+mQ_OWNER=mqm
+
+case "$1" in
+
+start)
+# The following command assumes that the mqm login
+# will not prompt the user for any values
+su - $MQ_OWNER -c "/opt/mqm/bin/strmqm $MGR_NAME"
+;;
+
+stop)
+# Stop the MQManager:
+# The following command assumes that the mqm login
+# will not prompt the user for any values
+su - $MQ_OWNER -c "/opt/mqm/bin/endmqm $MGR_NAME"
+
+;;
+esac
+
+chmod 755 /etc/init.d/startmqm
+
+
+加入服务：
+ln -s /etc/init.d/startmqm /etc/rc3.d/S110startmqm
+ln -s /etc/init.d/startmqm /etc/rc5.d/S110startmqm
+ln -s /etc/init.d/startmqm /etc/rc0.d/K20startmqm

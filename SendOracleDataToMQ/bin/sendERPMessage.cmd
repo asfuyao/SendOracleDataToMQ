@@ -1,0 +1,1 @@
+sendERPMessage.exe WIN_BDDL WIN %1 %2

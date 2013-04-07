@@ -1,0 +1,42 @@
+# Project: SendOracleDataToMQ
+# Makefile created by Dev-C++ 4.9.9.2
+
+CPP  = g++.exe
+CC   = gcc.exe
+WINDRES = windres.exe
+RES  = 
+OBJ  = obj/datapack.o obj/datatable.o obj/logfile.o obj/main.o obj/mq.o $(RES)
+LINKOBJ  = obj/datapack.o obj/datatable.o obj/logfile.o obj/main.o obj/mq.o $(RES)
+LIBS =  -L"F:/Winds/Application/Dev-CppPortable/App/devcpp/lib" -L"D:/oracle/product/10.2.0/client_1/OCI/lib/MSVC" -L"C:/Program Files/IBM/WebSphere MQ/Tools/Lib" "C:/Program Files/IBM/WebSphere MQ/Tools/Lib/mqm.Lib" D:/oracle/product/10.2.0/client_1/OCI/lib/MSVC/oci.lib  
+INCS =  -I"F:/Winds/Application/Dev-CppPortable/App/devcpp/include"  -I"D:/oracle/product/10.2.0/client_1/OCI/include" 
+CXXINCS =  -I"F:/Winds/Application/Dev-CppPortable/App/devcpp/lib/gcc/mingw32/3.4.2/include"  -I"F:/Winds/Application/Dev-CppPortable/App/devcpp/include/c++/3.4.2/backward"  -I"F:/Winds/Application/Dev-CppPortable/App/devcpp/include/c++/3.4.2/mingw32"  -I"F:/Winds/Application/Dev-CppPortable/App/devcpp/include/c++/3.4.2"  -I"F:/Winds/Application/Dev-CppPortable/App/devcpp/include"  -I"D:/oracle/product/10.2.0/client_1/OCI/include" 
+BIN  = bin/sendERPMessage.exe
+CXXFLAGS = $(CXXINCS)   -fexpensive-optimizations -O2
+CFLAGS = $(INCS)   -fexpensive-optimizations -O2
+RM = rm -f
+
+.PHONY: all all-before all-after clean clean-custom
+
+all: all-before bin/sendERPMessage.exe all-after
+
+
+clean: clean-custom
+	${RM} $(OBJ) $(BIN)
+
+$(BIN): $(OBJ)
+	$(CPP) $(LINKOBJ) -o "bin\sendERPMessage.exe" $(LIBS)
+
+obj/datapack.o: src/datapack.cpp
+	$(CPP) -c src/datapack.cpp -o obj/datapack.o $(CXXFLAGS)
+
+obj/datatable.o: src/datatable.cpp
+	$(CPP) -c src/datatable.cpp -o obj/datatable.o $(CXXFLAGS)
+
+obj/logfile.o: src/logfile.cpp
+	$(CPP) -c src/logfile.cpp -o obj/logfile.o $(CXXFLAGS)
+
+obj/main.o: src/main.cpp
+	$(CPP) -c src/main.cpp -o obj/main.o $(CXXFLAGS)
+
+obj/mq.o: src/mq.cpp
+	$(CPP) -c src/mq.cpp -o obj/mq.o $(CXXFLAGS)
